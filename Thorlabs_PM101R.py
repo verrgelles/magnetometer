@@ -4,8 +4,11 @@ import pyvisa
 class Device:
     def __init__(self):
         resource_manager = pyvisa.ResourceManager()
-        device_id = resource_manager.list_resources()[0]
-        self.instance = resource_manager.open_resource(device_id)
+        try:
+            device_id = resource_manager.list_resources()[0]
+            self.instance = resource_manager.open_resource(device_id)
+        except IndexError:
+            print('Device is not found')
 
     def is_device_available(self) -> bool:
         if self.instance.query("*IDN?") is not None:
